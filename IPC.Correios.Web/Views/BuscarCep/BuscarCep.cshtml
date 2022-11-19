@@ -1,0 +1,143 @@
+﻿@model IPC.Correios.Web.Repository.ViewModels.EnderecoViewModel
+
+@{
+    ViewBag.Title = "Buscar por Enderço";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("BuscarEndereco", "BuscarCep", FormMethod.Post))
+{
+    <div class="panel-body">
+        <div class="row">
+            <nav aria-label="breadcrumb pull-left">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Buscar Endereço</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(m => m.UF, null, new { @class = "form-label pull-left" })
+                @Html.DropDownList("IdEstados", null, "- Selecione -", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(m => m.Municipio, null, new { @class = "form-label pull-left" })
+                <select id="IdMunicipio" disabled class="form-control">
+                    <option value="">- Selecione -</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(m => m.Logradouro, null, new { @class = "form-label pull-left" })
+                <select id="IdLogradouro" disabled class="form-control">
+                    <option value="">- Selecione -</option>
+                </select>
+            </div>
+        </div>
+        <div class="row pull-left">
+            <div class="col-md-12">
+                @Html.ActionLink("Voltar", "index", "Home", null, new { @class = "btn btn-primary m-r-sm" })
+                <input type="button" id="btnPesquisar" disabled value="Pesquisar" class="btn btn-light m-r-sm" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#IdEstados").change(function () {
+                if ($(this).val() !== "") {
+                    $("#IdMunicipio").html('<option value="">- Selecione -</option>').show();
+                    $("#IdLogradouro").html('<option value="">- Selecione -</option>').show();
+                    $("#btnPesquisar").prop("disabled", true);
+                    $.get(
+                        "@Url.Action("BuscarMunicipios", "BuscarCep")",
+                        {
+                            Sigla: $(this).val()
+                        },
+                        function (data) {
+                            $("#IdMunicipio").prop("disabled", false);
+                            var option = '<option value="">- Selecione -</option>';
+
+                            $.each(data.rows, function (i, obj) {
+                                option += '<option value="' + obj.codigoMunicipio + '">' + obj.descricaoMunicipio + '</option>';
+                            });
+
+                            $("#IdMunicipio").html(option).show();
+                        });
+
+                } else {
+                    $("#IdMunicipio").html('<option value="">- Selecione -</option>').show();
+                    $("#IdMunicipio").prop("disabled", true);
+                    $("#IdLogradouro").html('<option value="">- Selecione -</option>').show();
+                    $("#IdLogradouro").prop("disabled", true);
+                    $("#btnPesquisar").prop("disabled", true);
+                }
+            });
+
+            $("#IdMunicipio").change(function () {
+                if ($(this).val() !== "") {
+                    $.get(
+                        "@Url.Action("BuscarLogradouros", "BuscarCep")",
+                        {
+                            codigoMunicipio: $(this).val()
+                        },
+                        function (data) {
+                            $("#IdLogradouro").prop("disabled", false);
+                            var option = '<option value="">- Selecione -</option>';
+                            $.each(data.rows, function (i, obj) {
+                                option += '<option value="' + obj.codigoLogradouro + '">' + obj.endereco + '</option>';
+                            });
+                            $("#IdLogradouro").html(option).show();
+                        });
+                } else {
+                    $("#IdLogradouro").html('<option value="">- Selecione -</option>').show();
+                    $("#IdLogradouro").prop("disabled", true);
+                }
+            });
+
+            $("#IdLogradouro").change(function () {
+                if ($(this).val() !== "") {
+                    $("#btnPesquisar").prop("disabled", false);
+                } else {
+                    $("#btnPesquisar").prop("disabled", true);
+                }
+            });
+
+            $("#btnPesquisar").click(function () {
+                let logradouro = $("#IdLogradouro :selected").val();
+                let municipio = $("#IdMunicipio :selected").text();
+                $.get(
+                    "@Url.Action("BuscarEnderecoPorLogradouro", "BuscarCep")",
+                    {
+                        codigoLogradouro: logradouro,
+                        descricaoMunicipio: municipio
+                    },
+                    function (data) {
+                        $.each(data, function (id, obj) {
+                            cep = obj[0].cep;
+                            codigologradouro = obj[0].codigoEndereco; 
+                            descricaomunicipio = obj[0].descricaoMunicipio;
+                            enderecologradouro = obj[0].endereco;
+                        });
+
+                        alert(" CEP: " + cep + "\n Codigo Logradouro: " + codigologradouro + "\n Municipio: " + descricaomunicipio + "\n Logradouro: " + enderecologradouro + "");
+                    }
+                );
+            });
+        });
+
+    </script>
+}
+
+
+
+

@@ -1,0 +1,51 @@
+﻿@model IPC.Correios.Web.Repository.ViewModels.EnderecoViewModel
+@{
+    ViewBag.Title = "Busca por Endereco";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("BuscarCep", "BuscarCep", FormMethod.Post))
+{
+    <div class="panel-body">
+        <div class="row">
+            <nav aria-label="breadcrumb pull-left">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+                    <li class="breadcrumb-item "><a href="@Url.Action("Index", "BuscarCep")">Buscar Endereço</a></li>
+                    <li class="breadcrumb-item "><a id="idResultado" href="#">Resultado</a></li>
+                </ol>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(m => m.Logradouro, null, new { @class = "form-label pull-left" })
+                @Html.TextBoxFor(m => m.Logradouro, null, new { @class = "form-control", @disabled = true, @title = "Logradouro" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(m => m.Municipio, null, new { @class = "form-label pull-left" })
+                @Html.TextBoxFor(m => m.Municipio, null, new { @class = "form-control", @disabled = true, @title = "Municipio/UF" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(m => m.Bairro, null, new { @class = "form-label pull-left" })
+                @Html.TextBoxFor(m => m.Bairro, null, new { @class = "form-control", @disabled = true, @title = "Bairro" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(m => m.CEP, null, new { @class = "form-label pull-left", @maxlength = "9" })
+                @Html.TextBoxFor(m => m.CEP, null, new { @class = "form-control", @disabled = true, @title = "Cep" })
+            </div>
+        </div>
+        <div class="row pull-left">
+            <div class="col-md-12">
+                @Html.ActionLink("Nova Busca", "index", "BuscarCep", null, new { @class = "btn btn-primary m-r-sm" })
+                <input type="button" id="btnBuscar" value="Imprimir" class="btn btn-light m-r-sm" />
+            </div>
+        </div>
+    </div>
+}
+

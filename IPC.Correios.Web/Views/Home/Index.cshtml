@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Apresentação";
+}
+<div>
+    <h2><strong>Bem vindo ao BuscadorCEP!</strong></h2>
+    <div style="text-align:left">
+        <p>
+            O aplicativo BuscadorCEP! permite que você encontre códigos de endereçamento portais(CEP).<br />
+            Se você já tiver tiver o CEP em mãos e gostaria de buscar seu endereço, o BuscadorCEP! também vai te ajudar.<br />
+            Aproveite! =D
+        </p>
+    </div>
+    <div style="text-align:left">
+        <a href="@Url.Action("Index", "BuscarCep")" class="btn btn-primary">Buscar Endereço</a>
+        <a href="@Url.Action("BuscarCEP", "BuscarCep")" class="btn btn-primary">Buscar CEP</a>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+﻿@model IPC.Correios.Web.ViewModels.EnderecoViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("BuscarEndereco", "BuscarCep", FormMethod.Post))
+{
+    <div class="panel-body">
+        <div class="row">
+            <nav aria-label="breadcrumb pull-left">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Buscar Endereço</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(m => m.Cep, null, new { @class = "form-label pull-left", @maxlength = "8" }) <p style="color: red;" class="pull-left">*</p>
+                @Html.TextBoxFor(m => m.Cep, null, new { @class = "form-control", @required = "required", @title = "Cep" })
+            </div>
+        </div>
+        <div class="row pull-left">
+            <div class="col-md-12">
+                @Html.ActionLink("Voltar", "index", "Home", null, new { @class = "btn btn-primary m-r-sm" })
+                <input type="submit" id="btnBuscar" value="Buscar" class="btn btn-light m-r-sm" />
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#Cep").inputmask("99.999-999");
+        });
+    </script>
+}
+
+
+
